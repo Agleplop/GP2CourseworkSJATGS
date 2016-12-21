@@ -41,7 +41,8 @@ GameObject * loadModelFromFile(const string & filename)
 			aiVector3D position = mesh->mVertices[v];
 			aiVector3D normal = mesh->mNormals[v];
 
-
+//as it is checking through each vertice of the model
+//it finds to highest and lowest of each x, y and z.
 			if (position.x > m_HX)
 				m_HX = position.x;
 			if (position.y > m_HY)
@@ -82,8 +83,12 @@ GameObject * loadModelFromFile(const string & filename)
 			verts.push_back(ourV);
 		}
 
+//The two furthest points are used to create two vectors that store the two furthest points of the model.
+		
 		vec3 highestCorner = vec3(m_HX, m_HY, m_HZ);
 		vec3 lowestCorner = vec3(m_LX, m_LY, m_LZ);
+		
+//These two points are passed throught to the game object the model belongs to
 		gameObject->getColliderSize(highestCorner, lowestCorner);
 
 		gameObject->copyVertexData(&verts[0], verts.size(), &indices[0], indices.size());

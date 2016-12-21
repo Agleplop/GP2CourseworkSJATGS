@@ -91,11 +91,13 @@ GLuint GameObject::getShaderProgram()
 	return m_GameObjectRenderer.getShaderProgram();
 }
 
+//takes a position from myGame.cpp and passes it throught to a function on its collider
 bool GameObject::checkCollision(vec3 position)
 {
 	return m_GameObjectCollider.checkCollision(position);
 }
 
+//Just passes the vectors from the model loading script to this gameobject's collider component
 void GameObject::getColliderSize(vec3 high, vec3 low)
 {
 	m_GameObjectCollider.setTransform(m_GameObjectTransform.getPosition(), m_GameObjectTransform.getScale());

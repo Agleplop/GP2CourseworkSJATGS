@@ -16,6 +16,7 @@ void BoxCollider::setCollider(vec3 high, vec3 low)
 
 void BoxCollider::scaleCollider()
 {
+	//multiplies the points of the collider by the scale to find the box collider
 	m_High.x *= m_Scale.x;
 	m_Low.x *= m_Scale.x;
 	m_High.y *= m_Scale.y;
@@ -28,7 +29,7 @@ void BoxCollider::scaleCollider()
 
 bool BoxCollider::checkCollision(vec3 position)
 {
-
+//This function takes in a position and checks if it lays within the confines of the collider.
 	if (!scaled)
 	{
 		scaleCollider();
@@ -54,10 +55,13 @@ bool BoxCollider::checkCollision(vec3 position)
 		m_zCollision = true;
 	}
 
+//if the point lies within the collider it returns true	
 	if (m_xCollision == true && m_yCollision == true && m_zCollision == true)
 	{
 		return true;
 	}
-
+	
+//otherwise it returns false
+	
 	return false;
 }

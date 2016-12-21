@@ -145,6 +145,22 @@ void MyGame::initScene()
 
 void MyGame::onKeyDown(SDL_Keycode keyCode)
 {
+
+//This function picks detects keyboard input.
+//W and S can be used to move the player backwards and forwards,
+//A and D are used to strafe, space is used to jump,
+//P is used to toggle debug mode, whilst in debug mode shift allows the character to move downwards
+//and keys 1-4 are used to toggle post proccessing effects
+
+//The check for each key to make the camera move starts with an if statement
+//This if statements just checks if the key that was pressed should do any thing
+//After that it checks if debug mode is on. 
+//If it is on it will call the move function on the camera
+//If it is not on it will call the check collision function on every game object in the scene
+//it passes in the return function of the camera's collision check function.
+//If any of the collision checks with the game objects return true
+//the camera does not move. If they all return false it calls the camera's move function.
+
 	if (keyCode == SDLK_w)
 	{
 		if (!m_DebugMode)
@@ -192,60 +208,64 @@ void MyGame::onKeyDown(SDL_Keycode keyCode)
 		}
 	}
 
-		if (keyCode == SDLK_a)
+	if (keyCode == SDLK_a)
+	{
+		if (!m_DebugMode)
 		{
-			if (!m_DebugMode)
+			bool temp = false;
+			for each (shared_ptr<GameObject> gameObject in GOList)
 			{
-				bool temp = false;
-				for each (shared_ptr<GameObject> gameObject in GOList)
+				if (gameObject->checkCollision(m_Camera->collisionCheck("Left")))
 				{
-					if (gameObject->checkCollision(m_Camera->collisionCheck("Left")))
-					{
-						temp = true;
-					}
-
-				}
-				if (!temp)
-				{
-					m_Camera->move("Left");
+					temp = true;
 				}
 
 			}
-			else
+			if (!temp)
+			{
+				m_Camera->move("Left");
+			}
+
+			}
+		else
+		{
+			m_Camera->move("Right");
+		}
+	}
+	else if (keyCode == SDLK_d)
+	{
+		if (!m_DebugMode)
+		{
+			bool temp = false;
+			for each (shared_ptr<GameObject> gameObject in GOList)
+			{
+				if (gameObject->checkCollision(m_Camera->collisionCheck("Right")))
+				{
+					temp = true;
+				}
+				
+			}
+			if (!temp)
 			{
 				m_Camera->move("Right");
 			}
+			
 		}
-		else if (keyCode == SDLK_d)
+		else
 		{
-			if (!m_DebugMode)
-			{
-				bool temp = false;
-				for each (shared_ptr<GameObject> gameObject in GOList)
-				{
-					if (gameObject->checkCollision(m_Camera->collisionCheck("Right")))
-					{
-						temp = true;
-					}
-
-				}
-				if (!temp)
-				{
-					m_Camera->move("Right");
-				}
-
-			}
-			else
-			{
 				m_Camera->move("Right");
-			}
 		}
+		
+	}
+
+//This checks for when space bar is pressed then calls the jump function
 
 		if (keyCode == SDLK_SPACE)
 		{
 			m_Camera->jump(m_DebugMode);
 		}
 
+//This checks for when space bar is pressed and if debug mode is off then calls the jump function
 		if (keyCode == SDLK_LSHIFT)
 		{
 			if (m_DebugMode)
@@ -255,6 +275,8 @@ void MyGame::onKeyDown(SDL_Keycode keyCode)
 
 		}
 
+//toggles debug mode on or off when p is pressed		
+		
 		if (keyCode == SDLK_p)
 		{
 			if (!m_DebugMode)
@@ -396,8 +418,9 @@ void MyGame::update()
 {
 	GameApplication::update();
 
-
-
+	//the m_projection matrix is used to set the parameters for the camera
+	//the view matrix determines where the camera is looking at
+	
 	m_ProjMatrix = perspective(radians(45.0f), (float)m_WindowWidth / (float)m_WindowHeight, 0.1f, 1000.0f);
 	m_ViewMatrix = lookAt(m_CameraPosition, m_CameraPosition + m_CameraLookAtPosition, vec3(0.0f, 1.0f, 0.0f));
 
